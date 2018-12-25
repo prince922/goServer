@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="renderer" content="webkit">
+  <title>video后台管理中心</title>
+  {{template "public/css.html" .}}
+  {{template "public/js.html" .}}
+</head>
+<body style="background-color:#f2f9fd;">
+<div class="header bg-main">
+  <div class="logo margin-big-left fadein-top">
+    <img src="/static/img/y.jpg" class="radius-circle rotate-hover togglenav" height="50" alt=""/>
+    <div class="logo-name">
+      <h1>总后台管理中心</h1>
+      <span>欢迎您，{{ .nickname}}</span>
+    </div>
+  </div>
+  <div class="head-l">
+    <a class="button button-little bg-red" href="/login/logout"><span class="icon-power-off"></span>退出登录</a>
+  </div>
+</div>
+<div class="leftnav">
+  <div class="leftnav-title">
+    <strong><span class="icon-list"></span>菜单列表</strong>
+  </div>
+  <!--<volist name="cur_menus" id="vo">-->
+    <!--<h2 <if condition="$key eq '0'">class="on"</if> ><span class="icon-pencil-square-o"></span>{$vo['name']}</h2>-->
+    <!--<ul <if condition="$key eq '0'">style="display:block"</if> >-->
+    <!--<volist name="vo._child" id="vo">-->
+      <!--<li><a href="{$vo['url']}" target="right"><span class="icon-caret-right"></span>{$vo['name']}</a></li>-->
+    <!--</volist>-->
+    <!--</ul>-->
+  <!--</volist>-->
+</div>
+<script type="text/javascript">
+  $(function () {
+    $(".leftnav h2").click(function () {
+      $(this).next().slideToggle(200);
+      $(this).toggleClass("on");
+      var that = this;
+      $(".leftnav h2").each(function () {
+        if (that != this) {
+          var $next = $(this).next();
+          if ($next.css('display') == 'block') {
+            $next.slideToggle(200);
+            $(this).toggleClass("on");
+          }
+        }
+      });
+    });
+    $(".leftnav ul li a").click(function () {
+      $("#a_leader_txt").text($(this).text());
+      $(".leftnav ul li a").removeClass("on");
+      $(this).addClass("on");
+    });
+    $(".togglenav").click(function () {
+      if ($(".admin.leftnavhide").size() > 0) {
+        $(".admin").removeClass('leftnavhide');
+        $(".leftnav").removeClass('hide');
+        return;
+      } else {
+        $(".admin").addClass('leftnavhide');
+        $(".leftnav").addClass('hide');
+        return;
+      }
+    })
+  });
+</script>
+<div class="admin">
+  <iframe scrolling="auto" rameborder="0" src="" name="right" width="100%" height="100%"></iframe>
+</div>
+</body>
+</html>
