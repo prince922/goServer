@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>{$nav_title}</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+    <link rel="stylesheet" href="/static/css/tag-this.css">
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><span class="icon-home">&nbsp;小说专栏</span></li>
+        <li><a href="/Book/index">小说管理</a></li>
+    </ul>
+    <p style="position: absolute;right: 20px;top:5px;">
+    </p>
+</div>
+<div class="admin-panel">
+    <div class="panel">
+        <div class="panel-head">
+            <strong>小说编辑</strong>
+        </div>
+        <div class="panel-body" style="width: 60%;float: left;">
+            <form method="post" class="form-x form-horizontal" enctype="multipart/form-data" action="/book/edit">
+
+                <div class="form-group">
+                    <div class="label" style="min-width: 100px;">
+                        <label for="firstSelect"><span class="text-dot">*</span>书籍分类：</label>
+                    </div>
+                    <div class="field">
+                        <select name="tid" class="input" style="width: 120px;display: initial;">
+                            <option value="-1">请选择分类</option>
+                            {{range $index, $data := .TypeList}}
+                                <option value="{{ $data.Id|id2str }}" {{if eq $data.Id $.Info.Tid}} selected {{end}}> {{$data.Name}} </option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot"></span>频道选择：</label>
+                    </div>
+                    <div class="field">
+                        <select name="channel" id="channel_gender" class="input" style="width: 80px;">
+                            <option value="3" {{if eq .Info.Channel 3}}selected="selected"{{end}} >全部</option>
+                            <option value="1" {{if eq .Info.Channel 1}}selected="selected"{{end}} >男频</option>
+                            <option value="2" {{if eq .Info.Channel 2}}selected="selected"{{end}} >女频</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <div class="label">
+                        <label for="name"><span class="text-dot">*</span>书籍名称：</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" class="input" id="name" name="name" size="15" value="{{.Info.Name}}" placeholder="书籍名称">
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <div class="label">
+                        <label for="author"><span class="text-dot">*</span>书籍作者：</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" class="input" id="author" name="author" size="45" value="{{ .Info.Author }}" placeholder="请输入书籍作者"style="width:120px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label>书籍封面：</label>
+                    </div>
+                    <div class="field">
+                        <div class="add">
+                            <input type="file" name="thumb" id="thumb" value="{{ .Info.Thumb }}" style="line-height: 32px;">
+                            {{if .Info.Thumb }}
+                                <img src="{{ .Info.Thumb }}" style="width:150px;height:150px;">
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label>书籍简介：</label>
+                    </div>
+                    <div class="field">
+                        <textarea class="input" id="title" name="title" rows="8" cols="80" style="height:100px;">{{ .Info.Intro }}</textarea>
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>书籍标签：</label>
+                    </div>
+                    <div class="field">
+                        <div class="example" id="label_box">
+                            <div id="label_tags" class="tag-this">
+                                {{range $index, $data := .LabelArr}}
+                                     <span class="tag" data-tab="{{$data}}">
+                                        <span>{{$data}}</span>
+                                        <a class="remove-tag">x</a>
+                                    </span>
+                                {{end}}
+                            </div>
+                            <input name="label" id="label" type="hidden" value="{{ .Info.Label }}">
+                            <a class="fruit-show-all-button button border-sub">添加书籍标签</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>书籍状态：</label>
+                    </div>
+                    <div class="field" style="">
+                        <div class="button-group border-main radio">
+                            <label class="button {{if eq .Info.Status -1}} active {{end}}">
+                                <input name="status" value="-1" type="radio" {{if eq .Info.Status -1}}checked="checked"{{end}} >
+                                <span class="icon icon-times"></span> 下架
+                            </label>
+                            <label class="button {{if eq .Info.Status 1}} active {{end}}">
+                                <input name="status" value="1" type="radio" {{if eq .Info.Status 1}}checked="checked"{{end}} >
+                                <span class="icon icon-times"></span> 上架
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>完结状态：</label>
+                    </div>
+                    <div class="field" style="">
+                        <div class="button-group border-main radio">
+                            <label class="button {{if eq .Info.IsEnd 1}} active {{end}}">
+                                <input name="is_end" value="1" type="radio" {{if eq .Info.IsEnd 1}} checked="checked" {{end}} >
+                                <span class="icon icon-check"></span> 已完结
+                            </label>
+                            <label class="button {{if eq .Info.IsEnd 0}} active {{end}}">
+                                <input name="is_end" value="0" type="radio" {{if eq .Info.IsEnd 0}}checked="checked"{{end}} >
+                                <span class="icon icon-times"></span> 连载中
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-button">
+                    <input type="hidden" name="id" value="{{ .Info.Id|id2str}}">
+                    <button class="button bg-main" target-form="form-horizontal" type="submit">提交</button>
+                    <a class="button" href="javascript:history.go(-1);">返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var flag = 0;
+    $("#startVIP>option").each(function (index, element) {
+        if (flag == 0) {
+            if ($(this).css('background-color') == 'rgb(238, 238, 238)') {
+                $(this).attr("selected", true);
+                flag = 1;
+            }
+        }
+    });
+
+    // 设置书籍标签
+    function SetBookTab() {
+        var tagthis = '';
+        $("#label_tags .tag").each(function(){
+            if(tagthis == ''){
+                tagthis += $(this).attr('data-tab');
+            }else{
+                tagthis += ','+$(this).attr('data-tab');
+            }
+        });
+        $("#label").val(tagthis);
+    }
+
+    // 设置搜索标签
+    function SetSearchLabelTab() {
+        var search_label_v = '';
+        $("#search_label_tags .tag").each(function(){
+            if(search_label_v == ''){
+                search_label_v += $(this).attr('data-tab');
+            }else{
+                search_label_v += ','+$(this).attr('data-tab');
+            }
+        });
+        $("#search_label").val(search_label_v);
+    }
+
+    $(function () {
+        $('#short_type').change(function () {
+            var short_type = $(this).val();
+            var short_num = $("#short_num").val();
+            if (short_type == 1) {
+                short_num = short_num / 10;
+            } else {
+                short_num = short_num * 10;
+            }
+            $("#short_num").val(short_num);
+        });
+
+        // 书籍标签
+        $(document).on('click','#label_tags .tag .remove-tag', function () {
+            $(this).parents('.tag').remove();
+            SetBookTab();
+            return false;
+        });
+
+        // 添加书籍标签
+        $('#label_box .fruit-show-all-button').on('click', function () {
+            layer.prompt({title: '请输入书籍标签'},function(value, index, elem){
+                layer.close(index);
+                if(value.length < 1){
+                    layer.msg('书籍标签不能为空！',{icon:5});
+                    return false;
+                }
+                var uidhtml = ' <span class="tag" data-tab="'+value+'" ><span>'+value+'</span><a class="remove-tag">x</a></span>';
+                $('#label_tags').append(uidhtml);
+                SetBookTab();
+            });
+            return false;
+        });
+
+        // 搜索标签
+        $(document).on('click','#search_label_tags .tag .remove-tag', function () {
+            $(this).parents('.tag').remove();
+            SetSearchLabelTab();
+            return false;
+        });
+
+        // 添加搜索标签
+        $('#search_label_box .fruit-show-all-button').on('click', function () {
+            layer.prompt({title: '请输入搜索标签'},function(value, index, elem){
+                layer.close(index);
+                if(value.length < 1){
+                    layer.msg('书籍标签不能为空！',{icon:5});
+                    return false;
+                }
+                var uidhtml = ' <span class="tag" data-tab="'+value+'" ><span>'+value+'</span><a class="remove-tag">x</a></span>';
+                $('#search_label_tags').append(uidhtml);
+                SetSearchLabelTab();
+            });
+            return false;
+        });
+
+
+    })
+</script>
+</body>
+</html>

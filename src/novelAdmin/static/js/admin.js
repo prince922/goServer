@@ -728,21 +728,6 @@ $(function () {
     }
 });
 
-function addcreateid()
-{
-	// jQuery.getJSON('http://api.qirexiaoshuo.com/data/create?cname=渠道用户&callback=?', function(data){
-	// 	if(data.result=="")
-	// 	{
-	// 		alert('新建ID失败，请重新创建');
-	// 	}
-	// 	else
-	// 	{
-	// 		document.getElementById("extendid").value=data.result;
-	// 	}
-	// });
-	
-}
-
 
 
 

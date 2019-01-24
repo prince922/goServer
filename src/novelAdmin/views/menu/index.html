@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>管理后台</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><span class="icon-home">&nbsp;系统操作</span></li>
+        <li><a>菜单栏</a></li>
+    </ul>
+    <p style="position: absolute;right: 20px;top:5px;">
+        <a href="/menu/add" class="button button-small bg-main">添加</a>
+    </p>
+</div>
+<div class="admin-panel">
+    <div class="xm12" style="padding-right:0px;">
+        <div class="panel">
+
+            <div class="panel-head">
+
+            </div>
+            <form method="post">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <td width="5%" align="center" class="ft-700">菜单名称</td>
+                        <td width="5%" align="center" class="ft-700">菜单地址</td>
+                        <td width="5%" align="center" class="ft-700">操作</td>
+                    </tr>
+
+                    {{range $index, $data := .Menu}}
+                        <tr id="stat_btn_{{$data.Id}}">
+                            <td align="left">{{$data.Name}}</td>
+                            <td align="center">{{$data.Url}}</td>
+                            <td align="center">
+                                <a href="/menu/edit?id={{$data.Id|id2str}}" class="button border-sub button-little">修改</a>
+                                {{/*<a href="/menu/del?id={{$data.Id|id2str}}" class="button border-dot button-little">删除</a>*/}}
+                            </td>
+                        </tr>
+                        {{range $k,$v := $data.Child}}
+                            <tr id="stat_btn_c{{$data.Id|id2str}}_{{$k}}">
+                                <td align="left">------{{$v.Name}}</td>
+                                <td align="center">{{$v.Url}}</td>
+                                <td align="center">
+                                    <a href="/menu/edit?id={{$data.Id|id2str}}&index={{$k}}" class="button border-sub button-little">修改</a>
+                                    {{/*<a href="javascript:;" onclick="del('{{$data.Id|id2str}}');" class="button border-dot button-little">删除</a>*/}}
+                                </td>
+                            </tr>
+                        {{end}}
+                    {{end}}
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    //删除菜单
+    function del(id,type) {
+        //询问框
+        layer.confirm('你确定要删除吗？', {
+            icon: 3, title:'提示', btn: ['确定','取消'] //按钮
+        }, function(index){
+            // 二次确认
+            layer.close(index);
+            if(type == 1){
+                var tmp_ids = [];
+                $("input[name='ids[]']:checked").each(function (i, n) {
+                    tmp_ids.push(n.value);
+                });
+                var ids = tmp_ids.join(',');
+            }else{
+                var ids = id;
+            }
+            if (ids) {
+                layer.load();
+                $.ajax({
+                    'url': "/Menu/del",
+                    'data': {'id': ids},
+                    'type': 'POST',
+                    'dataType': 'json',
+                    'success': function (res) {
+                        layer.closeAll('loading');
+                        if (res.status == 1) {
+                            layer.msg('删除成功',{icon:6});
+                            if(type == 1){
+                                window.location.reload();
+                            }else{
+                                $("#stat_btn_" + id).remove();
+                            }
+                        } else {
+                            layer.msg(res.msg,{icon:5});
+                        }
+                    }
+                });
+            } else {
+                layer.msg('选择你要删除的记录',{icon:5});
+            }
+            return false;
+        });
+        return false;
+    }
+</script>
+</html>

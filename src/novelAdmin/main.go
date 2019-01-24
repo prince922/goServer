@@ -17,7 +17,10 @@ func init() {
 func main() {
 	beego.InsertFilter("/*", beego.BeforeRouter, FilterUser)
 	beego.InsertFilter("/*", beego.BeforeRouter, FilterMethod)
-
+	addViewMap()
 	beego.Run()
+}
 
+func addViewMap() {
+	beego.AddFuncMap("id2str", Id2string)
 }

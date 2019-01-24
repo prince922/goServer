@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>管理后台</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><a href="/"><span class="icon-home">&nbsp;首页</span></a></li>
+    </ul>
+</div>
+<div class="admin-panel">
+    <div class="xm12" style="padding-right:0px;">
+        <div class="panel">
+            <div class="panel-head">服务器基本信息</div>
+            <table class="table table-bordered table-hover">
+                {{range $index, $data := .info}}
+                    <tr>
+                        <td width="20%" class="ft-700">{{$data.Name}}</td>
+                        <td width="80%" class="ft-700" style=" word-wrap: break-word; word-break: normal;">
+                            {{$data.Info}}
+                        </td>
+                    </tr>
+                {{end}}
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

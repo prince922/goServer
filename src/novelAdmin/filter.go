@@ -7,7 +7,7 @@ import (
 
 // 过滤器
 var FilterUser = func(ctx *context.Context) {
-	_, ok := ctx.Input.Session("uid").(int)
+	_, ok := ctx.Input.Session("uid").(string)
 
 	// 没有登录，返回到登录
 	if !ok && ctx.Request.RequestURI != "/admin/login" {

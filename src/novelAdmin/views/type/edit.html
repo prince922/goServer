@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>管理后台</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><span class="icon-home">&nbsp;系统操作</span></li>
+        <li><a>分类管理</a></li>
+    </ul>
+    <p style="position: absolute;right: 20px;top:5px;">
+    </p>
+</div>
+<div class="admin-panel">
+    <div class="panel">
+        <div class="panel-head">
+            <strong>分类编辑</strong>
+        </div>
+        <div class="panel-body" style="width: 60%;float: left;">
+            <form method="post" class="form-x form-horizontal" action="/type/edit">
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>分类名称：</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" style="width: 300px;" class="input" name="name" value="{{.Info.Name}}" data-validate="required:请填写分类名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>别名：</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" style="width: 300px;" class="input" name="alias" value="{{.Info.Alias}}"  >
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="label"  >
+                        <label><span class="text-dot">*</span>频道：</label>
+                    </div>
+                    <div class="field" style="">
+                        <div class="button-group border-main radio">
+                            <label class="button {{if eq .Info.Channel 1}}active {{end}}">
+                                <input name="channel" value="1" type="radio" {{if eq .Info.Channel 1}}checked="checked"{{end}} >
+                                <span class="icon icon-times"></span>男频
+                            </label>
+                            <label class="button {{if eq .Info.Channel 2}}active {{end}}">
+                                <input name="channel" value="2" type="radio" {{if eq .Info.Channel 2}}checked="checked"{{end}} >
+                                <span class="icon icon-check"></span> 女频
+                            </label>
+                            <label class="button {{if eq .Info.Channel 3}}active {{end}}">
+                                <input name="channel" value="3" type="radio" {{if eq .Info.Channel 3}}checked="checked"{{end}} >
+                                <span class="icon icon-check"></span> 全部
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="label"  >
+                        <label><span class="text-dot">*</span>类型：</label>
+                    </div>
+                    <div class="field" style="">
+                        <div class="button-group border-main radio">
+                            <label class="button {{if eq .Info.Recommend 0}}active {{end}}">
+                                <input name="recommend" value="2" type="radio" {{if eq .Info.Recommend 0}}checked="checked"{{end}} >
+                                <span class="icon icon-times"></span>普通
+                            </label>
+                            <label class="button {{if eq .Info.Recommend 1}}active {{end}}">
+                                <input name="recommend" value="1" type="radio" {{if eq .Info.Recommend 1}}checked="checked"{{end}} >
+                                <span class="icon icon-check"></span> 推荐
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>标签：</label>
+                    </div>
+                    <div class="field">
+                        <input type="text" style="width: 300px;" class="input" name="label" value="{{.Info.Label}}" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="label">
+                        <label><span class="text-dot">*</span>排序：</label>
+                    </div>
+                    <div class="field">
+                        <input type="number" style="width: 300px;" class="input" name="sort" value="{{.Info.Sort}}" >
+                    </div>
+                </div>
+
+                <div class="form-button">
+                    <input name="id" type="hidden" value="{{.Info.Id|id2str}}">
+                    <a class="button bg-main ajax-post" target-form="form-horizontal" type="submit">提交</a>
+                    <a class="button" href="javascript:history.go(-1);">返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>

@@ -1,30 +1,36 @@
 package models
 
-import ()
+import (
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Admin struct {
-	Id            int    `orm:"auto" json:"id"`
-	Username      string `json:"username"`
-	Nickname      string `json:"nickname"`
-	Password      string `json:"password"`
-	Roleid        int    `json:"roleid"`
-	LastLoginTime int    `json:"lastLoginTime"`
-	LastLoginIp   int    `json:"lastLoginIp"`
-	LastLocation  string `json:"lastLocation"`
-	Menus         string `json:"menus"`
-	Addtime       int    `json:"addtime"`
-	Remark        string `json:"remark"`
-	Status        byte   `json:"status"`
+	Id            bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	Username      string        `bson:"username" json:"username"`
+	Nickname      string        `bson:"nickname" json:"nickname"`
+	Password      string        `bson:"password" json:"-"`
+	Roleid        int           `bson:"role_id" json:"role_id"`
+	LastLoginTime int           `bson:"last_login_time" json:"last_login_time"`
+	LastLoginIp   int           `bson:"last_login_ip" json:"last_login_ip"`
+	LastLocation  string        `bson:"last_location" json:"last_location"`
+	Menus         string        `bson:"menus" json:"menus"`
+	Addtime       int           `bson:"add_time" json:"add_time"`
+	Remark        string        `bson:"remark" json:"remark"`
+	Status        byte          `bson:"status" json:"status"`
+}
+
+func (this *Admin) tableName() (tableName string) {
+	tableName = "n_admin"
+	return
 }
 
 func (this *Admin) CheckAdmin(username, passwd string) (ret bool) {
 
-	this.Username = username
-	db.Using("default")
+	collection, s := getDBSession(this.tableName())
 
-	query := db.QueryTable(this) // 返回 QuerySeter
+	defer s.Close()
 
-	err := query.Filter("username", username).One(this, "Id", "Username", "Password", "Roleid", "Nickname")
+	err := collection.Find(bson.M{"username": username}).One(this) // 返回 QuerySeter
 
 	ret = false
 	if err != nil {

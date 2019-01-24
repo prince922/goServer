@@ -31,17 +31,17 @@ func (this *LoginController) Post() {
 		// 把相关用户信息存储起来
 		var saveUserInfo = func(info *models.Admin) {
 			redis := getRedis()
-			key := fmt.Sprintf("adminInfo_%v", info.Id)
+			key := fmt.Sprintf("adminInfo_%v", info.Id.Hex())
 			value, err := json.Marshal(info)
 			if err != nil {
 				return
 			}
 			redis.Put(key, string(value), 86400*time.Second)
 		}
+
 		// 异步协程处理用户信息
 		go saveUserInfo(admin)
-
-		this.SetSession("uid", admin.Id)
+		this.SetSession("uid", admin.Id.Hex())
 		this.Redirect("/", 302)
 		return
 	}

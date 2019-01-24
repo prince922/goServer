@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>管理后台</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><span class="icon-home">&nbsp;小说栏目</span></li>
+        <li><a>分类管理</a></li>
+    </ul>
+    <p style="position: absolute;right: 20px;top:5px;">
+        <a href="/type/edit" class="button button-small bg-main">添加</a>
+    </p>
+</div>
+<div class="admin-panel">
+    <div class="xm12" style="padding-right:0px;">
+        <div class="panel">
+            <div class="panel-head">
+                <form name="form" method="get">
+                    <table width="98%">
+                        <tr>
+                            <td align="right" style="width:65px;vertical-align:middle;">分类名：</td>
+                            <td align="left" style="width:80px">
+                                <input name="name" type="text" class="input input-small m-button-gray" style="display: inline-block;" value="{{ .Form.Name}}">
+                            </td>
+
+                            <td align="right" style="width:65px;vertical-align:middle;">性别：</td>
+                            <td align="left" style="width:80px">
+                                <select name="channel">
+                                    <option value="0">选择</option>
+                                    <option value="1" {{if eq .Form.Channel 1}} selected {{end}} >男</option>
+                                    <option value="2" {{if eq .Form.Channel 2}} selected {{end}} >女</option>
+                                    <option value="3" {{if eq .Form.Channel 3}} selected {{end}} >全部</option>
+                                </select>
+                            </td>
+
+                            <td align="right" style="width:65px;vertical-align:middle;">类型：</td>
+                            <td align="left" style="width:80px">
+                                <select name="recommend">
+                                    <option value="0">选择</option>
+                                    <option value="1" {{if eq .Form.Recommend 1}} selected {{end}} >推荐</option>
+                                    <option value="2" {{if eq .Form.Recommend 2}} selected {{end}} >普通</option>
+                                </select>
+                            </td>
+
+                            <td align="left" class="m-toolbar">
+                                <input type="submit" class="button button-small m-button-gray" style="margin-left:10px;" value="搜索">
+                                <input type="hidden" name="page" value="0">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <form method="post">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <td width="5%" align="center" class="bt">分类名</td>
+                        <td width="5%" align="center" class="bt">性别</td>
+                        <td width="5%" align="center" class="bt">排序</td>
+                        <td width="5%" align="center" class="bt">类型</td>
+                        <td width="5%" align="center" class="bt">操作</td>
+                    </tr>
+
+                    {{range $index, $data := .Lists}}
+                        <tr>
+                            <td align="center">{{$data.Name}}</td>
+                            <td align="center">
+                                {{if eq $data.Channel 1}}
+                                    <a style="color: red;">男</a>
+                                {{else if eq $data.Channel 2}}
+                                    <a style="color: green;">女</a>
+                                {{else}}
+                                    <a style="color: blue;">全部</a>
+                                {{end}}
+                            </td>
+                            <td align="center">{{$data.Sort}}</td>
+                            <td align="center" >
+                                {{if eq $data.Recommend 1}}
+                                    <a style="color: red;">推荐</a>
+                                {{else}}
+                                    <a style="color: green;">普通</a>
+                                {{end}}
+                            </td>
+                            <td align="center">
+                                <a href="/type/edit?id={{$data.Id|id2str}}" class="button border-sub button-little">修改</a>
+                            </td>
+                        </tr>
+                    {{end}}
+                </table>
+            </form>
+            <div class="panel-foot text-center" id="pageInfo">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/page.js"></script>
+<script type="text/javascript">
+    var pageInfo = {{.Page}} ;
+    page.init(pageInfo);
+    page.Create({'dom':'#pageInfo'});
+</script>
+</body>
+</html>

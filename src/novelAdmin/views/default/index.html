@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="renderer" content="webkit">
-  <title>video后台管理中心</title>
+  <title>管理后台</title>
   {{template "public/css.html" .}}
   {{template "public/js.html" .}}
 </head>
@@ -26,14 +26,15 @@
   <div class="leftnav-title">
     <strong><span class="icon-list"></span>菜单列表</strong>
   </div>
-  <!--<volist name="cur_menus" id="vo">-->
-    <!--<h2 <if condition="$key eq '0'">class="on"</if> ><span class="icon-pencil-square-o"></span>{$vo['name']}</h2>-->
-    <!--<ul <if condition="$key eq '0'">style="display:block"</if> >-->
-    <!--<volist name="vo._child" id="vo">-->
-      <!--<li><a href="{$vo['url']}" target="right"><span class="icon-caret-right"></span>{$vo['name']}</a></li>-->
-    <!--</volist>-->
-    <!--</ul>-->
-  <!--</volist>-->
+
+  {{range $index, $elem := .Menu}}
+      <h2><span class="icon-pencil-square-o"></span>{{$elem.Name}}</h2>
+      <ul>
+        {{range $k, $v := $elem.Child}}
+            <li><a href="{{$v.Url}}" target="right"><span class="icon-caret-right"></span>{{$v.Name}}</a></li>
+        {{end}}
+      </ul>
+  {{end}}
 </div>
 <script type="text/javascript">
   $(function () {
@@ -70,7 +71,7 @@
   });
 </script>
 <div class="admin">
-  <iframe scrolling="auto" rameborder="0" src="" name="right" width="100%" height="100%"></iframe>
+  <iframe scrolling="auto" rameborder="0" src="/index" name="right" width="100%" height="100%"></iframe>
 </div>
 </body>
 </html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title>管理后台</title>
+    {{template "public/css.html" .}}
+    {{template "public/js.html" .}}
+</head>
+<body>
+<div>
+    <ul class="bread">
+        <li><span class="icon-home">&nbsp;小说栏目</span></li>
+        <li><a>小说管理</a></li>
+    </ul>
+    <p style="position: absolute;right: 20px;top:5px;">
+        <a href="/book/edit" class="button button-small bg-main">添加书籍</a>
+    </p>
+</div>
+<div class="admin-panel">
+    <div class="xm12" style="padding-right:0px;">
+        <div class="panel">
+
+            <div class="panel-head">
+
+                <form name="form" method="get" action="/book/index">
+                    <table width="98%">
+                        <tbody>
+                        <tr>
+                            <td align="right" style="width: 85px;">小说名：</td>
+                            <td align="left" style="width: 105px;">
+                                <input name="name" type="text" class="input" id="name" size="10" value="{{ .Form.Name}}" style="display: inline-block"/>
+                            </td>
+
+                            <td align="right" style="width: 85px;">状态：</td>
+                            <td align="left" style="width: 105px;">
+                                <select name="status" class="input">
+                                    <option value="0">全部</option>
+                                    <option value="1" {{if eq .Form.Status 1}} selected {{end}} >下架</option>
+                                    <option value="2" {{if eq .Form.Status 2}} selected {{end}} >上架</option>
+                                    <option value="-1" {{if eq .Form.Status -1}} selected {{end}} >异常</option>
+                                </select>
+                            </td>
+
+
+                            <td align="right" style="width: 85px;">是否完结：</td>
+                            <td align="left" style="width: 105px;">
+                                <select name="isEnd" class="input">
+                                    <option value="0">全部</option>
+                                    <option value="1" {{if eq .Form.IsEnd 1}} selected {{end}} >连载</option>
+                                    <option value="2" {{if eq .Form.IsEnd 2}} selected {{end}} >完结</option>
+                                </select>
+                            </td>
+
+                            <td align="left" class="m-toolbar">
+                                <input type="submit" class="button button-small m-button-gray" style="margin-left:10px;"  value="搜索">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+
+            <form method="post">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <td width="6%" align="center" class="ft-700">小说名</td>
+                        <td width="3%" align="center" class="ft-700">作者</td>
+                        <td width="5%" align="center" class="ft-700">书籍信息</td>
+                        <td width="2%" align="center" class="ft-700">状态</td>
+                        <td width="7%" align="center" class="ft-700">操作</td>
+                    </tr>
+                    {{range $index, $data := .Lists}}
+                        <tr id="stat_btn_">
+
+                            <td align="center" class="show_note_box">
+                                {{ $data.Name }}
+                            </td>
+                            <td align="center" >
+                                {{ $data.Author }}
+                            </td>
+                            <td align="center" >
+                                {{if eq $data.IsEnd 1}}
+                                    完结
+                                {{else}}
+                                    连载
+                                {{end}} / {{ $data.Words }}字
+                            </td>
+                            <td align="center"  id="status_<{$vo.id}>">
+                                {{if eq $data.Status 1}}
+                                    正常
+                                {{else}}
+                                    异常
+                                {{end}}
+                            </td>
+
+                            <td align="center" >
+                                <a href="/book/edit?id={{$data.Id|id2str}}" class="button border-sub button-little">修改</a>
+                                <a href="/charpter/index?bid={{$data.Id|id2str}}" class="button border-sub button-little">查看章节</a>
+                            </td>
+
+                        </tr>
+                    {{end}}
+                </table>
+            </form>
+            <div class="panel-foot text-center" id="pageInfo">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/page.js"></script>
+<script type="text/javascript">
+    var pageInfo = {{.Page}} ;
+    page.init(pageInfo);
+    page.Create({'dom':'#pageInfo'});
+</script>
+</body>
+</html>

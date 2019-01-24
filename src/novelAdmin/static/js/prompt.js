@@ -13,8 +13,7 @@ $(function(){
         }
         if ( (target = $(this).attr('href')) || (target = $(this).attr('url')) ) {
             $.get(target).success(function(data){
-				var data = eval('(' + data + ')'); 
-                if (data.status==1) {
+                if (data.code==1) {
                     if (data.url) {
                         layer.msg(data.msg + ' 页面即将自动跳转~', {time: 2500, icon:6});
                     }else{
@@ -87,9 +86,7 @@ $(function(){
             }
             $(that).addClass('disabled').attr('autocomplete','off').prop('disabled',true);
             $.post(target,query).success(function(data){
-				var data = eval('(' + data + ')'); 
-		 
-                if (data.status==1) {
+                if (data.code==1) {
                     if (data.url) {
                         layer.msg(data.msg + ' 页面即将自动跳转~', {time: 2500, icon:6});
                     }else{
